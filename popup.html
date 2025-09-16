@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>链接转换</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="card">
+    <div class="header">
+      <i class="fas fa-link icon-header"></i>
+      <h2>链接转换</h2>
+    </div>
+    <div class="input-group">
+      <input type="text" id="urlInput" placeholder="在此处粘贴链接" autofocus>
+    </div>
+    <button id="processBtn" class="btn">
+      <span class="btn-text">处理链接</span>
+      <div class="btn-state">
+        <i class="fas fa-spinner fa-spin spinner hidden"></i>
+      </div>
+    </button>
+    <div id="resultContainer" class="result-box hidden">
+      <i class="fas fa-copy copy-icon" id="copyBtn"></i>
+      <a href="#" id="resultLink" target="_blank"></a>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
