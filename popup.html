@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <title>链接转换</title>
@@ -13,7 +14,13 @@
       <i class="fas fa-link icon-header"></i>
       <h2>链接转换</h2>
     </div>
-    <div class="input-group">
+    <!-- Switch Menu -->
+    <div class="switch-menu">
+      <button id="switchLink" class="active">转换IG链接</button>
+      <button id="switchPost">转换IG贴</button>
+    </div>
+    <div class="input-group" id="urlInputGroup">
+      <input type="text" id="groupId" placeholder="请输入小组ID" style="display: none;">
       <input type="text" id="urlInput" placeholder="在此处粘贴链接" autofocus>
     </div>
     <button id="processBtn" class="btn">
@@ -27,6 +34,8 @@
       <a href="#" id="resultLink" target="_blank"></a>
     </div>
   </div>
+
   <script src="popup.js"></script>
 </body>
+
 </html>
