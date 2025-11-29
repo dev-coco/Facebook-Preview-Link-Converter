@@ -421,5 +421,5 @@ async function getBindingIgLink (url) {
   }).then(response => response.text())
   const json = JSON.parse(text.split('\n')[1])
   const result = json.data.ad_library_page_info.page_info.ig_username
-  return result ? `https://www.instagram.com/${result}` : '无法获取'
+  return result ? `https://www.instagram.com/${result}` : '未绑定 IG'
 }
