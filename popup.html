@@ -1,41 +1,37 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <title>链接转换</title>
-  <link rel="stylesheet" href="popup.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-
-<body>
-  <div class="card">
-    <div class="header">
-      <i class="fas fa-link icon-header"></i>
-      <h2>链接转换</h2>
-    </div>
-    <!-- Switch Menu -->
-    <div class="switch-menu">
-      <button id="switchLink" class="active">转换IG链接</button>
-      <button id="switchPost">转换IG贴</button>
-    </div>
-    <div class="input-group" id="urlInputGroup">
-      <input type="text" id="groupId" placeholder="请输入小组ID" style="display: none;">
-      <input type="text" id="urlInput" placeholder="在此处粘贴链接" autofocus>
-    </div>
-    <button id="processBtn" class="btn">
-      <span class="btn-text">处理链接</span>
-      <div class="btn-state">
-        <i class="fas fa-spinner fa-spin spinner hidden"></i>
+  <head>
+    <meta charset="UTF-8" />
+    <title>链接转换</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <i class="fas fa-link icon-header"></i>
+        <h2>链接转换</h2>
       </div>
-    </button>
-    <div id="resultContainer" class="result-box hidden">
-      <i class="fas fa-copy copy-icon" id="copyBtn"></i>
-      <a href="#" id="resultLink" target="_blank"></a>
+      <div class="switch-menu">
+        <button id="switchLink" class="active">转换 IG 链接</button>
+        <button id="switchPost">转换 IG 贴</button>
+        <button id="switchGetIg">获取 IG 链接</button>
+      </div>
+      <div class="input-group" id="urlInputGroup">
+        <input type="text" id="groupId" placeholder="请输入小组ID" style="display: none" />
+        <input type="text" id="urlInput" placeholder="在此处粘贴链接" autofocus />
+      </div>
+      <button id="processBtn" class="btn">
+        <span class="btn-text">处理链接</span>
+        <div class="btn-state">
+          <i class="fas fa-spinner fa-spin spinner hidden"></i>
+        </div>
+      </button>
+      <div id="resultContainer" class="result-box hidden">
+        <i class="fas fa-copy copy-icon" id="copyBtn"></i>
+        <a href="#" id="resultLink" target="_blank"></a>
+      </div>
     </div>
-  </div>
-
-  <script src="popup.js"></script>
-</body>
-
+    <script src="popup.js"></script>
+  </body>
 </html>

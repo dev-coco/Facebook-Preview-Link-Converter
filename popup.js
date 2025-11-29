@@ -8,34 +8,40 @@ const copyBtn = document.getElementById('copyBtn')
 
 const switchLinkBtn = document.getElementById('switchLink')
 const switchPostBtn = document.getElementById('switchPost')
+const switchGetIgBtn = document.getElementById('switchGetIg')
 const groupIdEl = document.getElementById('groupId')
 
 // 模式切换按钮绑定事件
-switchLinkBtn.onclick = toggle
-switchPostBtn.onclick = toggle
+switchLinkBtn.onclick = () => setMode('link')
+switchPostBtn.onclick = () => setMode('post')
+switchGetIgBtn.onclick = () => setMode('get_ig')
 
-// 切换模式
-function toggle (e) {
-  let isLink
+// 当前模式
+let currentMode = 'link'
 
-  // 如果没有传参，默认使用转换 IG 链接界面
-  if (!e) {
-    isLink = false
-  } else {
-    // 判断点的是哪个按钮
-    isLink = e.target === switchLinkBtn
+// 新的模式切换函数
+function setMode (mode) {
+  currentMode = mode
+
+  // 重置所有按钮状态
+  switchLinkBtn.classList.remove('active')
+  switchPostBtn.classList.remove('active')
+  switchGetIgBtn.classList.remove('active')
+
+  // 激活当前按钮
+  if (mode === 'link') {
+    switchLinkBtn.classList.add('active')
+  } else if (mode === 'post') {
+    switchPostBtn.classList.add('active')
+  } else if (mode === 'get_ig') {
+    switchGetIgBtn.classList.add('active')
   }
 
-  // 切换按钮样式
-  switchLinkBtn.classList.toggle('active', isLink)
-  switchPostBtn.classList.toggle('active', !isLink)
-  // 显示对应界面
-  groupIdEl.style.display = isLink ? 'none' : 'block'
+  // post 状态时显示小组 ID 输入框
+  groupIdEl.style.display = mode === 'post' ? 'block' : 'none'
 
-  // 保存模式参数
-  chrome.storage.local.set({
-    mode: isLink ? 'link' : 'post'
-  })
+  // 保存设置
+  chrome.storage.local.set({ mode: mode })
 }
 
 // 保存修改的小组 ID
@@ -49,7 +55,7 @@ groupIdEl.addEventListener('change', () => {
 chrome.storage.local.get(null, config => {
   groupIdEl.value = config?.groupId || ''
   const mode = config?.mode || 'link'
-  mode === 'post' && toggle()
+  setMode(mode)
 })
 
 // 按钮状态切换函数
@@ -67,7 +73,7 @@ function setButtonState (state) {
     processBtn.disabled = false
     processBtn.style.backgroundColor = '#28a745'
 
-    // 2秒后恢复初始状态
+    // 2 秒后恢复初始状态
     setTimeout(() => setButtonState('initial'), 2000)
   } else {
     // 'initial'
@@ -103,6 +109,9 @@ processBtn.addEventListener('click', async () => {
   } else if (mode === 'post') {
     // 转换 IG 贴
     previewLink = await getShareLink(url, groupId)
+  } else if (mode === 'get_ig') {
+    // 获取 IG 链接
+    previewLink = await getBindingIgLink(url)
   }
 
   // 显示结果并更新按钮状态
@@ -125,6 +134,7 @@ copyBtn.addEventListener('click', () => {
     })
 })
 
+// 随机生成 uuid
 function uuid () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, str => {
     const randomInt = (Math.random() * 16) | 0
@@ -340,4 +350,76 @@ async function getShareLink (link, groupId) {
   } catch (error) {
     return '无法获取'
   }
+}
+
+/**
+ * @description 获取专页绑定 Instagram 链接
+ * @param {string} url - 专页链接
+ * @returns {string} Instagram 链接
+ */
+async function getBindingIgLink (url) {
+  async function urlCovertPageId () {
+    const text = await fetch(url, {
+      headers: {
+        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8'
+      }
+    }).then(response => response.text())
+    try {
+      return text.match(/(?<="associated_page_id":").*?(?=")/g)[0]
+    } catch (error) {
+      return '无法获取专页编号'
+    }
+  }
+  const token = await getToken()
+  const pageId = await urlCovertPageId()
+  console.log('编号', pageId)
+  if (pageId === '无法获取专页编号') {
+    return '无法获取专页编号'
+  }
+  const param = {
+    activeStatus: 'ACTIVE',
+    adType: 'ALL',
+    audienceTimeframe: 'LAST_7_DAYS',
+    bylines: [],
+    collationToken: null,
+    contentLanguages: [],
+    countries: ['ALL'],
+    country: 'ALL',
+    deeplinkAdID: null,
+    excludedIDs: [],
+    fetchPageInfo: true,
+    fetchSharedDisclaimers: true,
+    hasDeeplinkAdID: false,
+    isAboutTab: true,
+    isAudienceTab: false,
+    isLandingPage: false,
+    isTargetedCountry: false,
+    location: null,
+    mediaType: 'ALL',
+    multiCountryFilterMode: null,
+    pageIDs: [],
+    potentialReachInput: [],
+    publisherPlatforms: [],
+    queryString: '',
+    regions: [],
+    searchType: 'PAGE',
+    sessionID: uuid(),
+    shouldFetchCount: true,
+    sortData: null,
+    source: 'PAGE_TRANSPARENCY_WIDGET',
+    startDate: null,
+    viewAllPageID: pageId
+  }
+  const body = new FormData()
+  body.append('fb_dtsg', token)
+  body.append('fb_api_req_friendly_name', 'AdLibraryMobileFocusedStateProviderRefetchQuery')
+  body.append('variables', JSON.stringify(param))
+  body.append('doc_id', '25278989111737394')
+  const text = await fetch('https://www.facebook.com/api/graphql/', {
+    body,
+    method: 'POST'
+  }).then(response => response.text())
+  const json = JSON.parse(text.split('\n')[1])
+  const result = json.data.ad_library_page_info.page_info.ig_username
+  return result ? `https://www.instagram.com/${result}` : '无法获取'
 }

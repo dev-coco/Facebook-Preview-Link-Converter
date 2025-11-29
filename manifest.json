@@ -3,7 +3,7 @@
   "name": "链接转换工具",
   "description": "获取预览后的链接。",
   "author": "Raz1ner",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.png"
