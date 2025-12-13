@@ -210,7 +210,6 @@ async function getPreviewLink (url, type) {
     const json = JSON.parse(text.split('\n')[0])
 
     if (type === 1) {
-      // const link = json.data.link_preview.story_attachment.styles.attachment.url
       const link = json.data.link_preview.story_attachment.styles.attachment.story_attachment_link_renderer.attachment.url
       return link || '无法获取'
     } else if (type === 2) {
@@ -424,5 +423,3 @@ async function getBindingIgLink (url) {
   const result = json.data.ad_library_page_info.page_info.ig_username
   return result ? `https://www.instagram.com/${result}` : '未绑定 IG'
 }
-
-// https://www.facebook.com/permalink.php?story_fbid=pfbid02uvvHgr3TSQ1GA5QSs2DnLm22E4EDjizxiVYvKQ45jN2JJHa4J9npnf9ZizFgZqp3l&id=61572602604000
