@@ -365,7 +365,8 @@ async function getBindingIgLink (url) {
       }
     }).then(response => response.text())
     try {
-      return text.match(/(?<="associated_page_id":").*?(?=")/g)[0]
+      return text.match(/(?<=delegate_page":{"id":").*?(?=")/g)[0]
+      // return text.match(/(?<="associated_page_id":").*?(?=")/g)[0]
     } catch (error) {
       return '无法获取专页编号'
     }
