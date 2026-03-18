@@ -210,7 +210,7 @@ async function getPreviewLink (url, type) {
     const json = JSON.parse(text.split('\n')[0])
 
     if (type === 1) {
-      const link = json.data.link_preview.story_attachment.styles.attachment.story_attachment_link_renderer.attachment.url
+      const link = json?.data?.link_preview?.story_attachment?.styles?.attachment?.story_attachment_link_renderer?.attachment?.url ?? json?.data?.link_preview?.story_attachment?.styles?.attachment?.url
       return link || '无法获取'
     } else if (type === 2) {
       const shareParam = json.data.link_preview.share_scrape_data
